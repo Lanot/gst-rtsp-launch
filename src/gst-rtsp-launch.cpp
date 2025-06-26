@@ -23,19 +23,19 @@
 
 #define DEFAULT_RTSP_PORT "8554"
 #define DEFAULT_RTSP_ENDPOINT "video"
-#define DEFAULT_DISABLE_RTCP FALSE
+// #define DEFAULT_DISABLE_RTCP FALSE
 
 static char *port = (char *) DEFAULT_RTSP_PORT;
 static char *endpoint = (char *) DEFAULT_RTSP_ENDPOINT;
-static gboolean disable_rtcp = DEFAULT_DISABLE_RTCP;
+// static gboolean disable_rtcp = DEFAULT_DISABLE_RTCP;
 
 static GOptionEntry entries[] = {
     {"port", 'p', 0, G_OPTION_ARG_STRING, &port,
             "Port to listen on (default: " DEFAULT_RTSP_PORT ")", "PORT"},
     {"endpoint", 'e', 0, G_OPTION_ARG_STRING, &endpoint,
             "Endpoint name (default: " DEFAULT_RTSP_ENDPOINT ")", "ENDPOINT"},
-    {"disable-rtcp", '\0', 0, G_OPTION_ARG_NONE, &disable_rtcp,
-            "Whether RTCP should be disabled (default false)", NULL},
+//    {"disable-rtcp", '\0', 0, G_OPTION_ARG_NONE, &disable_rtcp,
+//            "Whether RTCP should be disabled (default false)", NULL},
     {NULL}
 };
 
@@ -78,7 +78,7 @@ main (int argc, char *argv[])
     factory = gst_rtsp_media_factory_new ();
     gst_rtsp_media_factory_set_launch (factory, argv[1]);
     gst_rtsp_media_factory_set_shared (factory, TRUE);
-    gst_rtsp_media_factory_set_enable_rtcp (factory, !disable_rtcp);
+    // gst_rtsp_media_factory_set_enable_rtcp (factory, !disable_rtcp); // since GST 1.20.x only
 
     /* attach the test factory to the /test url */
     gst_rtsp_mount_points_add_factory (mounts, "/" + endpoint, factory);
