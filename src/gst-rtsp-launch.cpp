@@ -22,7 +22,7 @@
 #include <gst/rtsp-server/rtsp-server.h>
 
 #define DEFAULT_RTSP_PORT "8554"
-#define DEFAULT_RTSP_ENDPOINT "video"
+#define DEFAULT_RTSP_ENDPOINT "/video"
 // #define DEFAULT_DISABLE_RTCP FALSE
 
 static char *port = (char *) DEFAULT_RTSP_PORT;
@@ -81,9 +81,7 @@ main (int argc, char *argv[])
     // gst_rtsp_media_factory_set_enable_rtcp (factory, !disable_rtcp); // since GST 1.20.x only
 
     /* attach the test factory to the /test url */
-    std::string mount = "/";
-    mount += endpoint;
-    gst_rtsp_mount_points_add_factory(mounts, mount.c_str(), factory);
+    gst_rtsp_mount_points_add_factory(mounts, endpoint, factory);
 
     /* don't need the ref to the mapper anymore */
     g_object_unref (mounts);
@@ -92,7 +90,7 @@ main (int argc, char *argv[])
     gst_rtsp_server_attach (server, NULL);
 
     /* start serving */
-    g_print ("stream ready at rtsp://127.0.0.1:%s/%s\n", port, endpoint);
+    g_print ("stream ready at rtsp://127.0.0.1:%s%s\n", port, endpoint);
     g_main_loop_run (loop);
 
     return 0;
