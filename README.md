@@ -25,6 +25,7 @@ You may run the server from the build directory:
 cd build
 ./gst-rtsp-launch --help
 ```
+Supports GST 1.18.4
 
 ...or install the binary in your system:
 

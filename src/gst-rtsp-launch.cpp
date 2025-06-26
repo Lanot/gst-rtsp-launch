@@ -22,12 +22,16 @@
 #include <gst/rtsp-server/rtsp-server.h>
 
 #define DEFAULT_RTSP_PORT "8554"
+#define DEFAULT_RTSP_ENDPOINT "/video"
 
 static char *port = (char *) DEFAULT_RTSP_PORT;
+static char *endpoint = (char *) DEFAULT_RTSP_ENDPOINT;
 
 static GOptionEntry entries[] = {
   {"port", 'p', 0, G_OPTION_ARG_STRING, &port,
       "Port to listen on (default: " DEFAULT_RTSP_PORT ")", "PORT"},
+  {"endpoint", 'e', 0, G_OPTION_ARG_STRING, &endpoint,
+    "Endpoint name (default: " DEFAULT_RTSP_ENDPOINT ")", "ENDPOINT"},
   {NULL}
 };
 
@@ -71,8 +75,8 @@ main (int argc, char *argv[])
   gst_rtsp_media_factory_set_launch (factory, argv[1]);
   gst_rtsp_media_factory_set_shared (factory, TRUE);
 
-  /* attach the test factory to the /test url */
-  gst_rtsp_mount_points_add_factory (mounts, "/test", factory);
+  /* attach the test factory to the /video url */
+  gst_rtsp_mount_points_add_factory (mounts, endpoint, factory);
 
   /* don't need the ref to the mapper anymore */
   g_object_unref (mounts);
@@ -81,7 +85,7 @@ main (int argc, char *argv[])
   gst_rtsp_server_attach (server, NULL);
 
   /* start serving */
-  g_print ("stream ready at rtsp://127.0.0.1:%s/test\n", port);
+  g_print ("stream ready at rtsp://127.0.0.1:%s%endpoint\n", port, endpoint);
   g_main_loop_run (loop);
 
   return 0;
