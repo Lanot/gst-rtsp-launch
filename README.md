@@ -22,13 +22,14 @@ make
 You may run the server from the build directory:
 
 ```bash
-cd src
+cd build
 ./gst-rtsp-launch --help
 ```
 
 ...or install the binary in your system:
 
 ```bash
+cd build
 sudo make install
 gst-rtsp-launch --help
 ```
