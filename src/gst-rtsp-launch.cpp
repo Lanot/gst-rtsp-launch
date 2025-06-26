@@ -81,7 +81,9 @@ main (int argc, char *argv[])
     // gst_rtsp_media_factory_set_enable_rtcp (factory, !disable_rtcp); // since GST 1.20.x only
 
     /* attach the test factory to the /test url */
-    gst_rtsp_mount_points_add_factory (mounts, "/" + endpoint, factory);
+    std::string mount = "/";
+    mount += endpoint;
+    gst_rtsp_mount_points_add_factory(mounts, mount.c_str(), factory);
 
     /* don't need the ref to the mapper anymore */
     g_object_unref (mounts);
