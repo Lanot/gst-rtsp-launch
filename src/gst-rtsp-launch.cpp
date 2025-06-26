@@ -59,23 +59,36 @@ int main(int argc, char** argv) {
 
     loop = g_main_loop_new(NULL, FALSE);
 
+    /* create a server instance */
     server = gst_rtsp_server_new();
-    g_object_set(server, "service", opts.port, nullptr);
-    mounts = gst_rtsp_server_get_mount_points(server);
-    factory = gst_rtsp_media_factory_new();
+    g_object_set(server, "service", opts.port, NULL);
 
+    /* get the mount points for this server, every server has a default object
+     * that be used to map uri mount points to media factories */
+    mounts = gst_rtsp_server_get_mount_points (server);
+
+    /* make a media factory for a test stream. The default media factory can use
+     * gst-launch syntax to create pipelines.
+     * any launch line works as long as it contains elements named pay%d. Each
+     * element with pay%d names will be a stream */
+    factory = gst_rtsp_media_factory_new ();
     gst_rtsp_media_factory_set_launch(factory, argv[1]);
     gst_rtsp_media_factory_set_shared(factory, TRUE);
+    //gst_rtsp_media_factory_set_enable_rtcp (factory, !disable_rtcp);
 
+    /* attach the test factory to the /test url */
     g_print("Using pipeline (as parsed): %s\n", gst_rtsp_media_factory_get_launch(factory));
     std::string mount = "/";
     mount += opts.endpoint;
     gst_rtsp_mount_points_add_factory(mounts, mount.c_str(), factory);
 
-    g_object_unref(mounts);
+    /* don't need the ref to the mapper anymore */
+    g_object_unref (mounts);
 
-    gst_rtsp_server_attach(server, NULL);
+    /* attach the server to the default maincontext */
+    gst_rtsp_server_attach (server, NULL);
 
+    /* start serving */
     g_print("Stream ready at rtsp://127.0.0.1:%s/%s\n", opts.port, opts.endpoint);
     g_main_loop_run(loop);
 
